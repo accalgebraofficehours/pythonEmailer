@@ -10,7 +10,7 @@ def spammer(toAddr):
 
     numTimes = 10
 
-    with smtplib.SMTP("smtp.gmail.com", "587") as smtpserver:
+    with smtplib.SMTP("smtp.gmail.com", 587) as smtpserver:
       smtpserver.ehlo()
       smtpserver.starttls()
       smtpserver.ehlo()
