@@ -1,6 +1,25 @@
 from flask import Flask, request, render_template
+import smtplib
 
 app = Flask(__name__)
+
+def spammer(toAddr):
+    toaddrs = [toAddr]
+    fromaddrs = "adam.poodleschool.founder@gmail.com"
+    message = "Hi, I'm requesting you ."
+
+    numTimes = 10
+
+    with smtplib.SMTP("smtp.gmail.com", "587") as smtpserver:
+      smtpserver.ehlo()
+      smtpserver.starttls()
+      smtpserver.ehlo()
+      smtpserver.login("adam.poodleschool.founder@gmail.com", "zlnzowjgeoalhwcj")
+      for i in range(numTimes):
+        smtpserver.sendmail(fromaddrs, toaddrs, message)
+        print(i)
+
+    print("Done!")
 
 @app.route("/")
 def home():
@@ -13,6 +32,6 @@ def send():
 
     print("Received:", user_input)
 
-    # Your Python code here
+    spammer(toAddr)
 
     return "", 204
