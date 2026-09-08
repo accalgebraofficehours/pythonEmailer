@@ -31,6 +31,7 @@ def test_smtp():
 
     results = {}
 
+    # Test DNS
     try:
         addresses = socket.getaddrinfo(
             "smtp.gmail.com",
@@ -46,24 +47,17 @@ def test_smtp():
     except Exception as e:
         results["dns_error"] = f"{type(e).__name__}: {e}"
 
-    for port in [465, 587]:
-        try:
-            s = socket.create_connection(
-                ("smtp.gmail.com", port),
-                timeout=10
-            )
-            s.close()
-            results[f"tcp_{port}"] = "CONNECTED"
-        except Exception as e:
-            results[f"tcp_{port}"] = f"{type(e).__name__}: {e}"
-    
+    # Test SMTP ports + HTTPS
     for host, port in [
         ("smtp.gmail.com", 465),
         ("smtp.gmail.com", 587),
         ("google.com", 443),
     ]:
         try:
-            s = socket.create_connection((host, port), timeout=10)
+            s = socket.create_connection(
+                (host, port),
+                timeout=10
+            )
             s.close()
             results[f"{host}:{port}"] = "CONNECTED"
         except Exception as e:
