@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-import smtplib
+import smtplib, socket
 
 app = Flask(__name__)
 
@@ -24,6 +24,20 @@ def spammer(toAddr):
 @app.route("/")
 def home():
     return render_template("index.html")
+
+@app.route("/test-ports")
+def test_ports():
+    results = {}
+
+    for port in [25, 465, 587]:
+        try:
+            s = socket.create_connection(("smtp.gmail.com", port), timeout=10)
+            s.close()
+            results[port] = "CONNECTED"
+        except Exception as e:
+            results[port] = f"{type(e).__name__}: {e}"
+
+    return results
 
 @app.route("/send", methods=["POST"])
 def send():
