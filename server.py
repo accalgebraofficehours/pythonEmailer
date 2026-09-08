@@ -32,6 +32,6 @@ def send():
 
     print("Received:", user_input)
 
-    spammer(toAddr)
+    spammer(user_input)
 
     return "", 204
