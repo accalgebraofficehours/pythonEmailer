@@ -56,6 +56,18 @@ def test_smtp():
             results[f"tcp_{port}"] = "CONNECTED"
         except Exception as e:
             results[f"tcp_{port}"] = f"{type(e).__name__}: {e}"
+    
+    for host, port in [
+        ("smtp.gmail.com", 465),
+        ("smtp.gmail.com", 587),
+        ("google.com", 443),
+    ]:
+        try:
+            s = socket.create_connection((host, port), timeout=10)
+            s.close()
+            results[f"{host}:{port}"] = "CONNECTED"
+        except Exception as e:
+            results[f"{host}:{port}"] = f"{type(e).__name__}: {e}"
 
     return results
 
