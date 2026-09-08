@@ -25,17 +25,37 @@ def spammer(toAddr):
 def home():
     return render_template("index.html")
 
-@app.route("/test-ports")
-def test_ports():
+@app.route("/test-smtp")
+def test_smtp():
+    import socket
+
     results = {}
 
-    for port in [25, 465, 587]:
+    try:
+        addresses = socket.getaddrinfo(
+            "smtp.gmail.com",
+            None,
+            socket.AF_UNSPEC,
+            socket.SOCK_STREAM
+        )
+
+        results["dns"] = list({
+            (x[4][0], x[0])
+            for x in addresses
+        })
+    except Exception as e:
+        results["dns_error"] = f"{type(e).__name__}: {e}"
+
+    for port in [465, 587]:
         try:
-            s = socket.create_connection(("smtp.gmail.com", port), timeout=10)
+            s = socket.create_connection(
+                ("smtp.gmail.com", port),
+                timeout=10
+            )
             s.close()
-            results[port] = "CONNECTED"
+            results[f"tcp_{port}"] = "CONNECTED"
         except Exception as e:
-            results[port] = f"{type(e).__name__}: {e}"
+            results[f"tcp_{port}"] = f"{type(e).__name__}: {e}"
 
     return results
 
